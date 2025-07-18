@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Productivity Profit Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Productivity Profit Calculator for Excavator and Dump Truck at MAA Site OBI</h1>
+    <div class="tabs">
+      <button class="tab active">MATERIAL OB</button>
+      <button class="tab" onclick="location.href='lgl.html'">MATERIAL LGL</button>
+      <button class="tab" onclick="location.href='hglmgl.html'">MATERIAL MGL & HGL</button>
+      <button class="tab" onclick="location.href='saprolite.html'">MATERIAL SAPROLITE</button>
+    </div>
+  <div class="container">
+    
+
+    <form id="calc-form">
+      <section>
+        <h2>DATA EXCAVATOR</h2>
+        <label for="">Bucket Capacity (Bcm)</label>
+        <input type="number" step="any" placeholder="Bucket Capacity (Bcm)" id="bucketCapacity" required>
+        <label for="">Bucket Fill Factor</label>
+        <input type="number" step="any" placeholder="Bucket Fill Factor" id="fillFactor" required>
+        <label for="">Cycle Time (Seconds)</label>
+        <input type="number" step="any" placeholder="Cycle Time (Seconds)" id="cycleTimeExca300" required>
+        <label for="">Total Bucket</label>
+        <input type="number" step="any" placeholder="Total Bucket" id="totalBucket" required>
+      </section>
+
+      <section>
+        <h2>DATA DUMP TRUCK</h2>
+        <label for="">Vessel Capacity (Bcm)</label>
+        <input type="number" step="any" placeholder="Vessel Capacity (Bcm)" id="vesselCapacity" required>
+        <label for="">Manuver Time (Seconds)</label>
+        <input type="number" step="any" placeholder="Manuver Time (Seconds)" id="manuverTime" required>
+        <label for="">Dumping Time (Seconds)</label>
+        <input type="number" step="any" placeholder="Dumping Time (Seconds)" id="dumpingTime" required>
+        <label for="">Speed Load (Km/Hour)</label>
+        <input type="number" step="any" placeholder="Speed Load (Km/Hour)" id="speedLoad" required>
+        <label for="">Speed Empty (Km/Hour)</label>
+        <input type="number" step="any" placeholder="Speed Empty (Km/Hour)" id="speedEmpty" required>
+      </section>
+
+      <section>
+        <h2>DATA TAMBAHAN</h2>
+        <label for="">Kurs Rupiah (Rp)</label>
+        <input type="number" step="any" placeholder="Kurs Rupiah (Rp)" id="kursRupiah" required>
+        <label for="">Hauling Distance (meters)</label>
+        <input type="number" step="any" placeholder="Hauling Distance (meters)" id="haulingDistance" required>
+        <label for="">Total Excavator 200 Trimming (Unit)</label>
+        <input type="number" step="any" placeholder="Total Excavator 200 Trimming (Unit)" id="exca200" required>
+        <label for="">Total Dozer (Unit)</label>
+        <input type="number" step="any" placeholder="Total Dozer (Unit)" id="dozer" required>
+      </section>
+
+      <button type="submit">CALCULATE</button>
+
+      <section id="results">
+        <h3>Calculation results</h3>
+        <div id="output"></div>
+      </section>
+    </form>
+  </div>
+<footer>Create By Akmal Fauzi</footer>
+  <script src="script.js"></script>
+</body>
+</html>
