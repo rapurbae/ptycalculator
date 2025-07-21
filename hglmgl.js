@@ -18,7 +18,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
   // Konstanta MATERIAL HGL & MGL
-  const MP = 3.966;
+  const MP = 4.2;
   const ODPM = 0.00013;
   const DMAX = 2000;
   const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
