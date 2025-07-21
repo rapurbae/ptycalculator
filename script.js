@@ -54,8 +54,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const OD = Math.max(0, HD - DMAX);
 
   // Revenue
-  const revMat = prodDT * MP * KURS;
-  const revDist = OD * ODPM * prodDT * KURS;
+  const revMat = prodExca * MP * KURS;
+  const revDist = OD * ODPM * prodExca * KURS;
   const revTotal = revMat + revDist;
 
   // Cost
