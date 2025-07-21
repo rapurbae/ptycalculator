@@ -18,7 +18,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
   // Konstanta MATERIAL SAPROLITE
-  const MP = 4.745;
+  const MP = 5;
   const ODPM = 0.00013;
   const DMAX = 2000;
   const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
