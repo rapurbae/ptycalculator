@@ -17,8 +17,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const EX200SEL = parseFloat(document.getElementById("exca200sel").value);
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
-  // Konstanta
-  const MP = 4;
+  // Konstanta MATERIAL HGL & MGL
+  const MP = 4.2;
   const ODPM = 0.00013;
   const DMAX = 2000;
   const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
@@ -26,8 +26,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const FDT = 8, DDT = 33914, SDT = 443468, CMDT = 84500;
   const FDZ = 24, DDZ = 140826, SDZ = 443468, CMDZ = 55230;
   const FC = 14000;
-  const EF = 0.75, SF = 0.93;
-  const DM = 1.578
+  const EF = 0.75, SF = 0.86;
+  const DM = 1.583;
 
   // Hitung q
   const q = BC * F;
@@ -87,7 +87,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   document.getElementById("output").innerHTML = `
   <label>Excavator 300 Productivity (Ton/Hour)</label>
   <input type="text" value="${prodExcaTon.toFixed(2)}" readonly>
-  
+
   <label>Dump Truck Productivity (Ton/Hour)</label>
   <input type="text" value="${prodDTTon.toFixed(2)}" readonly>
 
@@ -105,6 +105,5 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
 
   <label>Profit (Rupiah/Hour)</label>
   <input type="text" value="${formatIDR}" readonly>
-`;
-
+  `;
 });

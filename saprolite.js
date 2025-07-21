@@ -79,6 +79,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const profitIDR = revTotal - costTotal;
 
   // Format Number
+  const formatC = costTotal.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
+  const formatR = revTotal.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
   const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
 
   // Output
@@ -96,10 +98,10 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   <input type="text" value="${FM.toFixed(2)}" readonly>
 
   <label>Cost Total (Rupiah/Hour)</label>
-  <input type="text" value="${costTotal.toFixed(2)}" readonly>
+  <input type="text" value="${formatC}" readonly>
 
   <label>Revenue Total (Rupiah/Hour)</label>
-  <input type="text" value="${revTotal.toFixed(2)}" readonly>
+  <input type="text" value="${formatR}" readonly>
 
   <label>Profit (Rupiah/Hour)</label>
   <input type="text" value="${formatIDR}" readonly>
