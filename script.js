@@ -94,7 +94,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   <label>Cost Total (Rupiah/Hour)</label>
   <input type="text" value="${costTotal.toFixed(2)}" readonly>
 
-  <label>Revenue Total Rrupiah/Hour)</label>
+  <label>Revenue Total (Rupiah/Hour)</label>
   <input type="text" value="${revTotal.toFixed(2)}" readonly>
 
   <label>Profit (Rupiah/Hour)</label>
