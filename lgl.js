@@ -18,14 +18,14 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
   // Konstanta
-  const MP = 4.0;
+  const MP = 3.768;
   const ODPM = 0.00013;
   const DMAX = 2000;
-  const FE300 = 22, DE300 = 6.37, SE300 = 1.24;
-  const FE200 = 16, DE200 = 3.76, SE200 = 1.24;
-  const FDT = 8, DDT = 2.48, SDT = 1.24;
-  const FDZ = 24, DDZ = 10.12, SDZ = 1.24;
-  const FC = 0.86;
+  const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
+  const FE200 = 16, DE200 = 46185, SE200 = 443468, CM200 = 51265;
+  const FDT = 8, DDT = 33914, SDT = 443468, CMDT = 84500;
+  const FDZ = 24, DDZ = 140826, SDZ = 443468, CMDZ = 55230;
+  const FC = 14000;
   const EF = 0.75, SF = 0.93;
   const DM = 1.578
 
@@ -48,7 +48,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
 
   // Ritase & Dump Truck Productivity
   const RPH = 60 / (CTD / 60);
-  const prodDT = EF * VC * 3600 / CTD;
+  const prodDT = EF * VC * 3600 * SF / CTD;
   const prodDTTon = prodDT * DM;
 
   // Fleet Matching
@@ -58,8 +58,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const OD = Math.max(0, HD - DMAX);
 
   // Revenue
-  const revMat = prodExcaTon  * MP;
-  const revDist = OD * ODPM * prodExcaTon;
+  const revMat = prodDTTon  * MP * KURS;
+  const revDist = OD * ODPM * prodDTTon * KURS;
   const revTotal = revMat + revDist;
 
   // Cost
@@ -68,20 +68,17 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const fuelDT = FM * FDT * FC;
   const fuelDZ = DOZER * FDZ * FC;
 
-  const costExca300 = fuelExca300 + DE300 + SE300;
-  const costExca200 = fuelExca200 + (EX200 + EX200SEL) * (DE200 + SE200);
-  const costDT = fuelDT + FM * (DDT + SDT);
-  const costDZ = fuelDZ + DOZER * (DDZ + SDZ);
+  const costExca300 = fuelExca300 + DE300 + SE300 + CM300;
+  const costExca200 = fuelExca200 + (EX200 + EX200SEL) * (DE200 + SE200 + CM200);
+  const costDT = fuelDT + FM * (DDT + SDT + CMDT);
+  const costDZ = fuelDZ + DOZER * (DDZ + SDZ + CMDZ);
 
   const costTotal = costExca300 + costExca200 + costDT + costDZ;
 
   // Profit
-  const profitUSD = revTotal - costTotal;
-  const profitIDR = profitUSD * KURS;
+  const profitIDR = revTotal - costTotal;
 
-const formatUSDC = costTotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
-  const formatUSDR = revTotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
-  const formatUSD = profitUSD.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
+  // Format Number
   const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
 
   // Output
@@ -98,14 +95,11 @@ const formatUSDC = costTotal.toLocaleString("en-US", { style: "currency", curren
   <label>Fleet Matching (Unit)</label>
   <input type="text" value="${FM.toFixed(2)}" readonly>
 
-  <label>Cost Total (Dollar/Hour)</label>
-  <input type="text" value="${formatUSDC}" readonly>
+  <label>Cost Total (Rupiah/Hour)</label>
+  <input type="text" value="${costTotal.toFixed(2)}" readonly>
 
-  <label>Revenue Total (Dollar/Hour)</label>
-  <input type="text" value="${formatUSDR}" readonly>
-
-  <label>Profit (Dollar/Hour)</label>
-  <input type="text" value="${formatUSD}" readonly>
+  <label>Revenue Total (Rupiah/Hour)</label>
+  <input type="text" value="${revTotal.toFixed(2)}" readonly>
 
   <label>Profit (Rupiah/Hour)</label>
   <input type="text" value="${formatIDR}" readonly>
