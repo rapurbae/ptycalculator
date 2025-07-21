@@ -17,7 +17,7 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
   // Konstanta
-  const MP = 1.786;
+  const MP = 1.790;
   const ODPM = 0.00018;
   const DMAX = 700;
   const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
