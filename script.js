@@ -13,6 +13,8 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const SE = parseFloat(document.getElementById("speedEmpty").value);
   const KURS = parseFloat(document.getElementById("kursRupiah").value);
   const HD = parseFloat(document.getElementById("haulingDistance").value);
+  const OT = parseFloat(document.getElementById("overtimeshift").value);
+  const EX300 = parseFloat(document.getElementById("exca300").value);
   const EX200 = parseFloat(document.getElementById("exca200").value);
   const DOZER = parseFloat(document.getElementById("dozer").value);
 
@@ -20,12 +22,14 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const MP = 1.790;
   const ODPM = 0.00018;
   const DMAX = 700;
-  const FE300 = 22, DE300 = 87858, SE300 = 443468, CM300 = 50049;
-  const FE200 = 16, DE200 = 46185, SE200 = 443468, CM200 = 51265;
-  const FDT = 8, DDT = 33914, SDT = 443468, CMDT = 84500;
-  const FDZ = 24, DDZ = 140826, SDZ = 443468, CMDZ = 55230;
+  const FE300 = 22, DE300 = 87858, CM300 = 50049;
+  const FE200 = 16, DE200 = 46185, CM200 = 51265;
+  const FDT = 8, DDT = 33914, CMDT = 84500;
+  const FDZ = 24, DDZ = 140826, CMDZ = 55230;
   const FC = 14000;
   const EF = 0.75, SF = 0.82;
+  const BS = 3500000;
+  const TT = 700000;
 
   // Hitung q
   const q = BC * F;
@@ -59,15 +63,24 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const revTotal = revMat + revDist;
 
   // Cost
-  const fuelExca300 = FE300 * FC;
+  const fuelExca300 = FE300 * FC * EX300;
   const fuelExca200 = EX200 * FE200 * FC;
   const fuelDT = FM * FDT * FC;
   const fuelDZ = DOZER * FDZ * FC;
 
-  const costExca300 = fuelExca300 + DE300 + SE300 + CM300;
-  const costExca200 = fuelExca200 + (EX200 * (DE200 + SE200 + CM200));
-  const costDT = fuelDT + (FM * (DDT + SDT + CMDT));
-  const costDZ = fuelDZ + (DOZER * (DDZ + SDZ + CMDZ));
+  //total overtime
+  const TO = ((BS / 173) * OT) / 16.5;
+
+  //allinbasic
+  const AB = ((BS / 30) + (TT / 30)) / 16.5;
+
+  //SO
+  const SO = AB + TO;
+
+  const costExca300 = fuelExca300 + (EX300 * (DE300 + CM300 + SO));
+  const costExca200 = fuelExca200 + (EX200 * (DE200 + CM200 + SO));
+  const costDT = fuelDT + (FM * (DDT + CMDT + SO));
+  const costDZ = fuelDZ + (DOZER * (DDZ + CMDZ + SO));
 
   const costTotal = costExca300 + costExca200 + costDT + costDZ;
 
