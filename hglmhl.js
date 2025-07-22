@@ -81,9 +81,9 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const SO = AB + TO;
 
   const costExca300 = fuelExca300 + (EX300 * (DE300 + CM300 + SO));
-  const costExca200 = fuelExca200 + (EX200 + EX200SEL) * (DE200 + SO + CM200);
-  const costDT = fuelDT + FM * (DDT + SO + CMDT);
-  const costDZ = fuelDZ + DOZER * (DDZ + SO + CMDZ);
+  const costExca200 = fuelExca200 + ((EX200 + EX200SEL) * (DE200 + SO + CM200));
+  const costDT = fuelDT + (FM * (DDT + SO + CMDT));
+  const costDZ = fuelDZ + (DOZER * (DDZ + SO + CMDZ));
 
   const costTotal = costExca300 + costExca200 + costDT + costDZ;
 
