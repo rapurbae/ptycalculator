@@ -96,6 +96,21 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const formatR = revTotal.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
   const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
 
+  fetch("https://script.google.com/macros/s/AKfycbxIBriJVTQJnDHEW3Zay9OMhGmEe6nAv1ERZk_1NoPu-tIt_J9gjnIfh9bVISxVgmog/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    material: "lgl",
+    prodExca: prodExcaTon.toFixed(2), // Gunakan versi Ton
+    prodDT: prodDTTon.toFixed(2),
+    RPH: RPH.toFixed(2),
+    FM: FM.toFixed(2),
+    costTotal: costTotal,
+    revTotal: revTotal,
+    profitIDR: profitIDR
+  })
+});
+
   // Output
   document.getElementById("output").innerHTML = `
   <label>Excavator 300 Productivity (Ton/Hour)</label>
@@ -121,3 +136,4 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
 `;
 
 });
+
