@@ -93,21 +93,20 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
 
   // Kirim data ke Google Sheets
-  fetch("https://script.google.com/macros/s/AKfycbxINGPSkOe_2ExOnZvSbJZCfEy2KN8M8U769rusWlals-KG67DRtawYpg0RO7NbLW_F/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: new URLSearchParams({
-      prodExca: prodExca.toFixed(2),
-      prodDT: prodDT.toFixed(2),
-      RPH: RPH.toFixed(2),
-      FM: FM.toFixed(2),
-      costTotal: costTotal,
-      revTotal: revTotal,
-      profitIDR: profitIDR
-    })
-  });
+  fetch("https://script.google.com/macros/s/AKfycbxIBriJVTQJnDHEW3Zay9OMhGmEe6nAv1ERZk_1NoPu-tIt_J9gjnIfh9bVISxVgmog/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    material: "ob",
+    prodExca: prodExca.toFixed(2),
+    prodDT: prodDT.toFixed(2),
+    RPH: RPH.toFixed(2),
+    FM: FM.toFixed(2),
+    costTotal: costTotal,
+    revTotal: revTotal,
+    profitIDR: profitIDR
+  })
+});
 
   // Output
   document.getElementById("output").innerHTML = `
@@ -134,3 +133,4 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
 `;
 
 });
+
