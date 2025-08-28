@@ -93,27 +93,14 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
   const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
 
   // Kirim data ke Google Sheets
-  fetch("https://script.google.com/macros/s/AKfycbwikOvRfyxFKijEy5yr1wdIM_IYkTpoofTQGuKpY4AM5IIYQ81q6R_VVUFXL_vudQ_L/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxINGPSkOe_2ExOnZvSbJZCfEy2KN8M8U769rusWlals-KG67DRtawYpg0RO7NbLW_F/exec", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body: new URLSearchParams({
-      bucketCapacity: BC,
-      fillFactor: F,
-      cycleTimeExca300: CTE,
-      totalBucket: TB,
-      vesselCapacity: VC,
-      manuverTime: MT,
-      dumpingTime: DT,
-      speedLoad: SL,
-      speedEmpty: SE,
-      kursRupiah: KURS,
-      haulingDistance: HD,
-      overtimeshift: OT,
-      exca300: EX300,
-      exca200: EX200 || 0,
-      dozer: DOZER,
+      prodExca: prodExca.toFixed(2),
+      prodDT: prodDT.toFixed(2),
       RPH: RPH.toFixed(2),
       FM: FM.toFixed(2),
       costTotal: costTotal,
@@ -147,4 +134,3 @@ document.getElementById("calc-form").addEventListener("submit", function (e) {
 `;
 
 });
-
