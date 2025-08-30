@@ -1,148 +1,137 @@
-function recordTime(phaseId) {
-  const now = performance.now() / 1000; // detik sejak page load
-  document.getElementById(phaseId).value = now.toFixed(3);
-
-  const timeDisplayId = {
-    startLoading: 'start-loading-time',
-    digging: 'digging-time',
-    spotting1: 'spotting1-time',
-    swingLoad: 'swing-load-time',
-    spotting2: 'spotting2-time',
-    dumpingExca: 'dumping-exca-time',
-    spotting3: 'spotting3-time',
-    swingEmpty: 'swing-empty-time',
-    spotting4: 'spotting4-time',
-    startLoadingdt: 'start-loading-time-dt',
-    manuver: 'manuver-time'
-  }[phaseId];
-
-  const nowDate = new Date();
-  const timeStr = nowDate.toLocaleTimeString('en-GB') + '.' +
-    nowDate.getMilliseconds().toString().padStart(3, '0');
-  document.getElementById(timeDisplayId).textContent = timeStr;
-}
-
-function resetTimeCall() {
-  const ids = [
-    'startLoading','digging','spotting1','swingLoad',
-    'spotting2','dumpingExca','spotting3','swingEmpty','spotting4',
-    'startLoadingdt','manuver'
-  ];
-
-  ids.forEach(id => {
-    document.getElementById(id).value = '';
-    const textId = id.replace(/([A-Z])/g, "-$1").toLowerCase() + '-time';
-    if (document.getElementById(textId)) {
-      document.getElementById(textId).textContent = '-';
-    }
-  });
-}
-
 document.getElementById("calc-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  // input utama
-  const BC = +document.getElementById("bucketCapacity").value;
-  const F = +document.getElementById("fillFactor").value;
-  const VC = +document.getElementById("vesselCapacity").value;
-  const Swell = 0.82;
+  // Ambil input
+  const BC = parseFloat(document.getElementById("bucketCapacity").value);
+  const F = parseFloat(document.getElementById("fillFactor").value);
+  const CTE = parseFloat(document.getElementById("cycleTimeExca300").value);
+  const TB = parseFloat(document.getElementById("totalBucket").value);
+  const VC = parseFloat(document.getElementById("vesselCapacity").value);
+  const MT = parseFloat(document.getElementById("manuverTime").value);
+  const DT = parseFloat(document.getElementById("dumpingTime").value);
+  const SL = parseFloat(document.getElementById("speedLoad").value);
+  const SE = parseFloat(document.getElementById("speedEmpty").value);
+  const KURS = parseFloat(document.getElementById("kursRupiah").value);
+  const HD = parseFloat(document.getElementById("haulingDistance").value);
+  const OT = parseFloat(document.getElementById("overtimeshift").value);
+  const EX300 = parseFloat(document.getElementById("exca300").value);
+  const EX200 = parseFloat(document.getElementById("exca200").value);
+  const DOZER = parseFloat(document.getElementById("dozer").value);
 
-  // ambil timestamp excavator
-  const timesExca = [
-    +document.getElementById("startLoading").value,
-    +document.getElementById("digging").value,
-    +document.getElementById("spotting1").value,
-    +document.getElementById("swingLoad").value,
-    +document.getElementById("spotting2").value,
-    +document.getElementById("dumpingExca").value,
-    +document.getElementById("spotting3").value,
-    +document.getElementById("swingEmpty").value,
-    +document.getElementById("spotting4").value
-  ];
+  // Konstanta
+  const MP = 1.790;
+  const ODPM = 0.00018;
+  const DMAX = 700;
+  const FE300 = 22, DE300 = 87858, CM300 = 50049;
+  const FE200 = 16, DE200 = 46185, CM200 = 51265;
+  const FDT = 8, DDT = 33914, CMDT = 84500;
+  const FDZ = 24, DDZ = 140826, CMDZ = 55230;
+  const FC = 14000;
+  const EF = 0.75, SF = 0.82;
+  const BS = 3500000;
+  const TT = 700000;
 
-  const durationsExca = [];
-  for (let i = 1; i < timesExca.length; i++) {
-    if (timesExca[i] && timesExca[i-1]) {
-      durationsExca.push(timesExca[i] - timesExca[i-1]);
-    } else {
-      durationsExca.push(0);
-    }
-  }
-
-  const diggingTime   = durationsExca[0];
-  const spotting1Time = durationsExca[1];
-  const swingLoadTime = durationsExca[2];
-  const spotting2Time = durationsExca[3];
-  const dumpingTime   = durationsExca[4];
-  const spotting3Time = durationsExca[5];
-  const swingEmptyTime= durationsExca[6];
-  const spotting4Time = durationsExca[7];
-
-  const cycleExca = diggingTime + spotting1Time + swingLoadTime +
-                    spotting2Time + dumpingTime + spotting3Time +
-                    swingEmptyTime + spotting4Time;
-
-  const totalSpotting = spotting1Time + spotting2Time + spotting3Time + spotting4Time;
-  const pureCycleExca = cycleExca - totalSpotting;
-  const effExca = (cycleExca > 0) ? pureCycleExca / cycleExca : 0;
-
+  // Hitung q
   const q = BC * F;
-  const prodExca = (cycleExca > 0) ?
-    (q * 3600 * effExca * Swell) / cycleExca : 0;
 
-  const startDT = +document.getElementById("startLoadingdt").value;
-  const manuverDT = +document.getElementById("manuver").value;
+  // Excavator Productivity
+  const prodExca = q * 3600 * EF * SF / CTE;
 
-  let cycleDT = 0;  
-  if (manuverDT && startDT) {
-    cycleDT = manuverDT - startDT;
-  }
+  // Loading Time
+  const LT = CTE * TB;
 
-  const prodDT = (cycleDT > 0) ?
-    (VC * 3600 * Swell) / cycleDT : 0;
+  // Travel Time
+  const TL = (HD / 1000) / SL * 3600;
+  const TE = (HD / 1000) / SE * 3600;
 
-  const ritaseHour = (cycleDT > 0) ? 60 / (cycleDT / 60) : 0;
+  // Dump Truck Cycle
+  const CTD = LT + TL + TE + MT + DT;
 
-  const fleetMatch = (prodDT > 0) ? prodExca / prodDT : 0;
+  // Ritase & Dump Truck Productivity
+  const RPH = 60 / (CTD / 60);
+  const prodDT = EF * VC * 3600 * SF / CTD;
 
-  fetch("https://script.google.com/macros/s/AKfycbz72ePllGHWXXKnMv45_5J8ZA0G8a_6n62xAe16ZYhpxwK3Y351T2u30auFp4z5XkFDMw/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        material: "ob",
-        excavator300: document.getElementById("excavator300").value,
-        area: document.getElementById("area").value,
-        cuaca: document.getElementById("cuaca").value,
-        cycleExca: cycleExca.toFixed(2),
-        totalSpottingTime: totalSpottingTime.toFixed(2),
-        effExca: effExca.toFixed(4),
-        prodExca: prodExca.toFixed(2),
-        cycleDT: cycleDT.toFixed(2),
-        ritaseHour: ritaseHour.toFixed(2),
-        prodDT: prodDT.toFixed(2),
-        prodDTTon: prodDTTon.toFixed(2),
-        fleetMatch: fleetMatch.toFixed(2)  
-      })
-    });
+  // Fleet Matching
+  const FM = prodExca / prodDT;
 
-  // tampilkan output
-  document.getElementById("output").innerHTML = `
-    <label>Cycle Time Excavator 300 (s)</label>
-    <input type="text" value="${cycleExca.toFixed(2)}" readonly>
-    <label>Total Spotting Time (s)</label>
-    <input type="text" value="${totalSpotting.toFixed(2)}" readonly>
-    <label>Efisiensi Kerja Excavator</label>
-    <input type="text" value="${effExca.toFixed(2)}" readonly>
-    <label>Productivity Excavator (bcm/hour)</label>
-    <input type="text" value="${prodExca.toFixed(2)}" readonly>
-    <label>Cycle Time Dumptruck (s)</label>
-    <input type="text" value="${(cycleDT / 60).toFixed(2)}" readonly>
-    <label>Ritase / Hour</label>
-    <input type="text" value="${ritaseHour.toFixed(2)}" readonly>
-    <label>Dumptruck Productivity (bcm/hour)</label>
-    <input type="text" value="${prodDT.toFixed(2)}" readonly>
-    <label>Fleet Matching</label>
-    <input type="text" value="${fleetMatch.toFixed(2)}" readonly>
-  `;
+  // Overdistance
+  const OD = Math.max(0, HD - DMAX);
+
+  // Revenue
+  const revMat = prodExca * MP * KURS;
+  const revDist = OD * ODPM * prodExca * KURS;
+  const revTotal = revMat + revDist;
+
+  // Cost
+  const fuelExca300 = FE300 * FC * EX300;
+  const fuelExca200 = EX200 * FE200 * FC;
+  const fuelDT = FM * FDT * FC;
+  const fuelDZ = DOZER * FDZ * FC;
+
+  //total overtime
+  const TO = ((BS / 173) * OT) / 16.5;
+
+  //allinbasic
+  const AB = ((BS / 30) + (TT / 30)) / 16.5;
+
+  //SO
+  const SO = AB + TO;
+
+  const costExca300 = fuelExca300 + (EX300 * (DE300 + CM300 + SO));
+  const costExca200 = fuelExca200 + (EX200 * (DE200 + CM200 + SO));
+  const costDT = fuelDT + (FM * (DDT + CMDT + SO));
+  const costDZ = fuelDZ + (DOZER * (DDZ + CMDZ + SO));
+
+  const costTotal = costExca300 + costExca200 + costDT + costDZ;
+
+  // Profit
+  const profitIDR = revTotal - costTotal;
+
+  // Format Number
+  const formatC = costTotal.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
+  const formatR = revTotal.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
+  const formatIDR = profitIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 });
+
+  // Kirim data ke Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbzUK88eaxYZxgeKL4-K606zdQ0d4EATCLhX25oHotjWPZKKeC_F7dJfk--Zt4vwAWKE/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    material: "ob",
+    prodExca: prodExca.toFixed(2),
+    prodDT: prodDT.toFixed(2),
+    RPH: RPH.toFixed(2),
+    FM: FM.toFixed(2),
+    costTotal: costTotal,
+    revTotal: revTotal,
+    profitIDR: profitIDR
+  })
 });
+
+  // Output
+  document.getElementById("output").innerHTML = `
+  <label>Excavator 300 Productivity (Bcm/Hour)</label>
+  <input type="text" value="${prodExca.toFixed(2)}" readonly>
+  
+  <label>Dump Truck Productivity (Bcm/Hour)</label>
+  <input type="text" value="${prodDT.toFixed(2)}" readonly>
+
+  <label>Ritase/Hour</label>
+  <input type="text" value="${RPH.toFixed(2)}" readonly>
+
+  <label>Fleet Matching (Unit)</label>
+  <input type="text" value="${FM.toFixed(2)}" readonly>
+
+  <label>Cost Total (Rupiah/Hour)</label>
+  <input type="text" value="${formatC}" readonly>
+
+  <label>Revenue Total (Rupiah/Hour)</label>
+  <input type="text" value="${formatR}" readonly>
+
+  <label>Profit (Rupiah/Hour)</label>
+  <input type="text" value="${formatIDR}" readonly>
+`;
+
+});
+
 
